@@ -19,7 +19,7 @@ internal class PostHogImpl: PWAnalyticsProtocol {
 
         switch config.authType {
         case .apiKey(let apiKey):
-            let configuration = PHGPostHogConfiguration(apiKey: apiKey, host: config.host)
+            let configuration = PHGPostHogConfiguration(apiKey: apiKey, host: "https://" + config.host)
             PHGPostHog.setup(with: configuration)
         }
     }

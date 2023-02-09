@@ -8,7 +8,7 @@ public enum PWSceneEvent: String {
 }
 
 public final class PWAnalytics: PWAnalyticsProtocol {
-    static let shared = PWAnalytics()
+    public static let shared = PWAnalytics()
 
     private lazy var serviceFactory: PWAnalyticsServiceFactoryProtocol = PWAnalyticsServiceFactory()
     private var service: PWAnalyticsProtocol?
@@ -33,6 +33,13 @@ public struct PWAnalyticsConfig {
     let projectIdentifier: String
     let authType: PWAnalyticsAuthType
     let host: String
+
+    public init(type: PWAnalyticsType, projectIdentifier: String, authType: PWAnalyticsAuthType, host: String) {
+        self.type = type
+        self.projectIdentifier = projectIdentifier
+        self.authType = authType
+        self.host = host
+    }
 }
 
 public enum PWAnalyticsAuthType {
