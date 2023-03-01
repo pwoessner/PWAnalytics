@@ -40,4 +40,3 @@ PWAnalytics.shared.scene(event: .shown, on: "LoginScene")
 ---
 # License
 `PWAnalytics` is available under the MIT license.
-]
