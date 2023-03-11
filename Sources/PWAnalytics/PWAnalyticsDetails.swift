@@ -1,5 +1,5 @@
 //
-//  PWAnalyticsInfoPlist.swift
+//  PWAnalyticsDetails.swift
 //  
 //
 //  Created by Philipp Woessner on 11.03.23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PWAnalyticsInfoPlist {
+public struct PWAnalyticsDetails {
     public enum Key: String {
         case analyticsHost = "ANALYTICS_HOST"
         case analyticsKey = "ANALYTICS_KEY"

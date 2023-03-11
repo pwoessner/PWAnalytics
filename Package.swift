@@ -13,8 +13,16 @@ let package = Package(
             name: "PWAnalytics",
             targets: ["PWAnalytics"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-log", from: "1.0.0"),
+    ],
     targets: [
-        .target(name: "PWAnalytics"),
+        .target(
+            name: "PWAnalytics",
+            dependencies: [
+                .product(name: "Logging", package: "swift-log")
+            ]
+        ),
         .testTarget(
             name: "PWAnalyticsTests",
             dependencies: ["PWAnalytics"]

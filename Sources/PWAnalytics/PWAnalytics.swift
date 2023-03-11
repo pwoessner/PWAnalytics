@@ -5,9 +5,15 @@
 //  Created by Philipp Woessner on 11.03.23.
 //
 
-import os
+import Foundation
+import Logging
 
-internal let logger = Logger(subsystem: "PWAnalytics", category: "Package")
+internal let logger = Logger(label: Bundle.main.bundleIdentifier ?? "PWAnalytics")
+
+public protocol PWAnalyticsProvider {
+    func event(name: String)
+    func scene(event: PWSceneEvent, on: String)
+}
 
 public final class PWAnalytics {
     public static let shared = PWAnalytics()
