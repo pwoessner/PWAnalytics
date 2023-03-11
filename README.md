@@ -3,7 +3,9 @@
 </h1>
 
 <p align="center">
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/pwoessner/PWAnalytics/blob/main/LICENSE)
+    <a href="https://github.com/pwoessner/PWAnalytics/blob/main/LICENSE">
+        <img src="https://img.shields.io/badge/License-MIT-blue.svg">
+    </a>
 </p>
 
 
