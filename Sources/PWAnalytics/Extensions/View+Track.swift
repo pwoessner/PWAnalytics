@@ -8,7 +8,7 @@
 import SwiftUI
 
 public extension View {
-    public func track(_ scene: String) -> some View {
+    func track(_ scene: String) -> some View {
         modifier(AnalyticsModifier(scene))
     }
 }
