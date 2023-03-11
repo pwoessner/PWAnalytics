@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import Logging
+import os
 
-internal let logger = Logger(label: Bundle.main.bundleIdentifier ?? "PWAnalytics")
+internal let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "PWAnalytics", category: "Providing")
 
 public protocol PWAnalyticsProvider {
     func event(name: String)
