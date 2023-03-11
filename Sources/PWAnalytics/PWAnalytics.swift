@@ -1,51 +1,49 @@
-public protocol PWAnalyticsProtocol {
-    func event(name: String)
-    func scene(event: PWSceneEvent, on: String)
+//
+//  PWAnalytics.swift
+//
+//
+//  Created by Philipp Woessner on 11.03.23.
+//
+
+import os
+
+internal let logger = Logger(subsystem: "PWAnalytics", category: "Package")
+
+public final class PWAnalytics {
+    public static let shared = PWAnalytics()
+
+    private var provider: PWAnalyticsProvider?
+
+    private init() {
+        logger.debug("PWAnalytics shared initialized.")
+    }
+
+    public func register(provider: PWAnalyticsProvider) {
+        self.provider = provider
+        logger.info("Provider successfully registered.")
+    }
+
+    public func event(name: String) {
+        guard let provider else {
+            logger.warning("No provider registered - please register an analytics provider first.")
+            return
+        }
+
+        logger.debug("Reporting app event.")
+        provider.event(name: name)
+    }
+
+    public func scene(event: PWSceneEvent, on name: String) {
+        guard let provider else {
+            logger.warning("No provider registered - please register an analytics provider first.")
+            return
+        }
+
+        logger.debug("Reporting app scene event.")
+        provider.scene(event: event, on: name)
+    }
 }
 
 public enum PWSceneEvent: String {
     case shown, dismissed
-}
-
-public final class PWAnalytics: PWAnalyticsProtocol {
-    public static let shared = PWAnalytics()
-
-    private lazy var serviceFactory: PWAnalyticsServiceFactoryProtocol = PWAnalyticsServiceFactory()
-    private var service: PWAnalyticsProtocol?
-
-    private init() {}
-
-    public func setup(with config: PWAnalyticsConfig) {
-        self.service = serviceFactory.createAnalyticsService(for: config)
-    }
-
-    public func event(name: String) {
-        service?.event(name: name)
-    }
-
-    public func scene(event: PWSceneEvent, on name: String) {
-        service?.scene(event: event, on: name)
-    }
-}
-
-public struct PWAnalyticsConfig {
-    let type: PWAnalyticsType
-    let projectIdentifier: String
-    let authType: PWAnalyticsAuthType
-    let host: String
-
-    public init(type: PWAnalyticsType, projectIdentifier: String, authType: PWAnalyticsAuthType, host: String) {
-        self.type = type
-        self.projectIdentifier = projectIdentifier
-        self.authType = authType
-        self.host = host
-    }
-}
-
-public enum PWAnalyticsAuthType {
-    case apiKey(String)
-}
-
-public enum PWAnalyticsType {
-    case posthog
 }
