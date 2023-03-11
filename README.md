@@ -1,34 +1,109 @@
-# `PWAnalytics`
+<h1 align="center">
+    PWAnalytics
+</h1>
 
+<p align="center">
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/pwoessner/PWAnalytics/blob/main/LICENSE)
+</p>
 
-`PWAnalytics` is a lightweight Swift package that allows you to easily switch between different analytics providers in your iOS app. 
-Currently supported providers: 
-- [x] [Posthog](https://posthog.com)
-- [ ] Firebase
-- [ ] Google Analytics
-- [ ] smartlook
 
+`PWAnalytics` is a lightweight Swift package that abstracts an analytics provider to easily switch or implement custom analytics solutions.
+The main focus is to log events and report scene usages of an user. 
+Additionally, it enables [swift-log](https://github.com/apple/swift-log) to automatically log relevant log messages to the analytics provider as a custom event.
+ 
 ## Features
 
 - Simple abstraction layer to call and log app usage
-- Simple API for logging events and scene usage
+- `PWAnalytics` can log and scene events
+- `Logger` from [swift-log](https://github.com/apple/swift-log) will automatically upload logs also to the provider as an event if setup
+
+## Configuration
+The following `Info.plist` variables can be maintained but is optional:
+```xcconfig
+ENVIRONMENT = RELEASE
+ANALYTICS_HOST = HOST
+ANALYTICS_KEY = KEY
+```
+
+With this configuration in the `Info.plist` you can use the `PWAnalyticsDetails` convenience struct to read the configuration and create an `PWAnalyticsConfig` object. 
+Different approaches are also possible.
 
 ## Usage
+
+### Analytics
 To use `PWAnalytics` in your project, import the module:
 
 ```swift
 import PWAnalytics
 ```
 
-In order to log events and scene usage you need to setup the `PWAnalytics` instance:
+In order to log events and scene usage you first need to create your analytics provider and implement the the functions of the Provider protocol:
+
 ```swift
-PWAnalytics.shared.setup(with: sampleConfig)
+public protocol PWAnalyticsProvider {
+    func event(name: String)
+    func scene(event: PWSceneEvent, on: String)
+}
 ```
 
-For the setup a specific `PWAnalyticsConfig` is needed to select the analytics provider, the project identifier, the authenticaion type and the host of the provider.
+Example for [PostHog](https://posthog.com):
+```swift
+import PostHog
+import PWAnalytics
 
-After the setup is done you can use the following code to log events and report scene events:
+class PostHogProvider: PWAnalyticsProvider {
+    private var posthog: PHGPostHog? {
+        PHGPostHog.shared()
+    }
+
+    init?(with config: PWAnalyticsConfig) {
+        switch config.authType {
+        case .apiKey(let apiKey):
+            let configuration = PHGPostHogConfiguration(apiKey: apiKey, host: "https://" + config.host)
+            PHGPostHog.setup(with: configuration)
+        }
+    }
+
+    func event(name: String) {
+        posthog?.capture(name)
+    }
+
+    func scene(event: PWSceneEvent, on scene: String) {
+        posthog?.screen(scene, properties: ["Type": event.rawValue])
+    }
+}
+```
+
+After creating your provider you need to make sure to register it:
+```swift
+// Abstraction to load analytics details from the Info.plist file to set the in a `.xcconfig` file
+let details = PWAnalyticsDetails(bundle: Bundle.main)
+
+guard
+    let host = details.infoString(for: .analyticsHost),
+    !host.isEmpty,
+    let key = details.infoString(for: .analyticsKey),
+    !key.isEmpty
+else {
+    appLogger.warning("Analytics details not maintained.")
+    return
+}
+
+let config = PWAnalyticsConfig(
+    projectIdentifier: Bundle.main.bundleIdentifier ?? "AppName",
+    authType: .apiKey(key),
+    host: host
+)
+
+guard let provider = PostHogProvider(with: config) else {
+    appLogger.warning("Analytics Provider could not be initialized with the config provided.")
+    return
+}
+
+PWAnalytics.shared.register(provider: provider)
+```
+
+After the provider is registered you can use the following code to log events and report scene events:
 ```swift
 // Log an event
 PWAnalytics.shared.event(name: "Something happened.")
@@ -36,6 +111,23 @@ PWAnalytics.shared.event(name: "Something happened.")
 // Log a scene event
 PWAnalytics.shared.scene(event: .shown, on: "LoginScene")
 ```
+
+### Logging
+To automatically log events from Apple's swift-log package to the analytics provider you need to create a `Logger` instance and setup logging:
+ ```swift
+import Foundation
+import Logging
+import PWAnalytics
+
+let appLogger = Logger(label: "App")
+
+func setupLogging() {
+    let environment = PWAnalyticsDetails(bundle: .main).environment ?? .debug
+    PWAnalyticsLogging.shared.setupLogging(environment: environment)
+}
+```
+
+Depending on the environment a cusomt LogHandler is used to report log messages as an event to the provider.
 
 ---
 # License
