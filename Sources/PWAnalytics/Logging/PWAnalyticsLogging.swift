@@ -15,9 +15,9 @@ public class PWAnalyticsLogging {
     public func setupLogging(environment: PWAnalyticsEnv) {
         LoggingSystem.bootstrap { label in
             switch environment {
-            case .debug:
-                return PWAnalyticsLogHandler(for: label)
             case .release:
+                return PWAnalyticsLogHandler(for: label)
+            default:
                 return StreamLogHandler.standardError(label: label)
             }
         }
