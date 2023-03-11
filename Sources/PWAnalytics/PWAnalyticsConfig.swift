@@ -8,9 +8,9 @@
 import Foundation
 
 public struct PWAnalyticsConfig {
-    let projectIdentifier: String
-    let authType: PWAnalyticsAuthType
-    let host: String
+    public let projectIdentifier: String
+    public let authType: PWAnalyticsAuthType
+    public let host: String
 
     public init(projectIdentifier: String, authType: PWAnalyticsAuthType, host: String) {
         self.projectIdentifier = projectIdentifier
@@ -21,5 +21,4 @@ public struct PWAnalyticsConfig {
 
 public enum PWAnalyticsAuthType {
     case apiKey(String)
-    case basic(String)
 }
