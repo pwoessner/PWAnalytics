@@ -3,9 +3,11 @@
 </h1>
 
 <p align="center">
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/pwoessner/PWAnalytics/blob/main/LICENSE)
+[![license: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/pwoessner/PWAnalytics/blob/main/LICENSE)
+[![building](https://github.com/pwoessner/PWAnalytics/actions/workflows/swift.yml/badge.svg?branch=main)](https://github.com/pwoessner/PWAnalytics/actions/workflows/swift.yml)
+![platforms](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
+![swift-tools Version](https://img.shields.io/badge/Swift-5.7-F16D39.svg)
 </p>
-
 
 `PWAnalytics` is a lightweight Swift package that abstracts an analytics provider to easily switch or implement custom analytics solutions.
 The main focus is to log events and report scene usages of an user. 
