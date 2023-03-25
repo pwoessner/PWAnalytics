@@ -7,7 +7,7 @@
         <img src="https://img.shields.io/badge/License-MIT-blue.svg">
     </a>
     <a href="https://github.com/pwoessner/PWAnalytics/actions/workflows/swift.yml">
-        <img src="https://github.com/pwoessner/PWAnalytics/actions/workflows/swift.yml/badge.svg?branch=main">
+        <img src="https://github.com/pwoessner/PWAnalytics/actions/workflows/swift.yml/badge.svg?event=pull_request">
     </a>
     <img src="https://img.shields.io/badge/platform-iOS-lightgrey.svg">
     <img src="https://img.shields.io/badge/Swift-5.7-F16D39.svg">
